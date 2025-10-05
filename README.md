@@ -1,3 +1,47 @@
+# Extra Features
+
+## more flexible test script
+
+`benchmark.sh`
+
+Arguments:
+- `launch`: launch file for the navigation stack (can add more than 1)
+- `start_idx`: starting world index
+- `spacing`: index spacing
+- `repeat`: repeat time for each world index
+
+> NOTE: `start_idx` 0 and `spacing` 6 result in testing world index 0, 6, 12, ..., 354, the max world index is 359. The default launch file is `move_base_DWA.launch`, other arguments default value behave like `test.sh`
+
+E.g.
+```
+./benchmark.sh --launch move_base_DWA.launch move_base_eband.launch --start_idx 0 --spacing 9 --repeat 5
+```
+## move_base teb & mpc local planner plugin
+> NOTE: a fix is required to build mpc_local_planner, refers to https://github.com/rst-tu-dortmund/mpc_local_planner/pull/46
+
+Installation
+```
+cd ~/jackal_ws/src
+# teb
+git clone https://github.com/rst-tu-dortmund/teb_local_planner.git
+cd teb_local_planner
+git checkout melodic-devel
+# mpc
+cd ..
+git clone https://github.com/rst-tu-dortmund/mpc_local_planner.git
+cd mpc_local_planner
+git checkout melodic-devel
+# install dependencies and build
+cd ../..
+rosdep install teb_local_planner
+rosdep install mpc_local_planner
+catkin_make
+```
+
+
+
+--------------------------------------------------------------------------------
+
 <p align="center">
   <img width = "100%" src='res/BARN_Challenge.png' />
   </p>
