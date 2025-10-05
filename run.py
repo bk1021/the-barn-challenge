@@ -30,8 +30,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'test BARN navigation challenge')
     parser.add_argument('--world_idx', type=int, default=0)
     parser.add_argument('--gui', action="store_true")
-    parser.add_argument('--out', type=str, default="out.txt")
+    parser.add_argument('--out', type=str, default=None)
+    parser.add_argument('--launch', type=str, default="move_base_DWA.launch")
     args = parser.parse_args()
+
+    if args.out is None:
+        args.out = args.launch + ".txt"
     
     ##########################################################################################
     ## 0. Launch Gazebo Simulation
@@ -97,7 +101,7 @@ if __name__ == "__main__":
     ## (Customize this block to add your own navigation stack)
     ##########################################################################################
     
-    launch_file = join(base_path, '..', 'jackal_helper/launch/move_base_eband.launch')
+    launch_file = join(base_path, '..', 'jackal_helper/launch/', args.launch)
     nav_stack_process = subprocess.Popen([
         'roslaunch',
         launch_file,
