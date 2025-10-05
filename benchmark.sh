@@ -13,9 +13,12 @@ while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
         --launch)
-        LAUNCH_FILES+=("$2")
         shift
-        shift
+        # Collect all non-option arguments as launch files
+        while [[ $# -gt 0 && "$1" != --* ]]; do
+            LAUNCH_FILES+=("$1")
+            shift
+        done
         ;;
         --start_idx)
         START_IDX="$2"
