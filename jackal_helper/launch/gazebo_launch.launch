@@ -18,6 +18,9 @@
   <!-- Optionally enable teleop for the simulation -->
   <arg name="joystick" default="false" />
 
+  <arg name="rviz" default="false" />
+  <arg name="rviz_config" default="$(find jackal_helper)/configs/common.rviz" />
+
   <!-- Launch Gazebo with the specified world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="debug" value="0" />
@@ -38,5 +41,15 @@
   </include>
 
   <node pkg="jackal_helper" type="collision_publisher_node" name="collision_publisher_node" />
+
+  <group if="$(arg rviz)">
+    <node
+      pkg="rviz"
+      type="rviz"
+      name="rviz"
+      args="-d $(arg rviz_config)"
+      output="screen"
+    />
+  </group>
 
 </launch>
