@@ -33,7 +33,7 @@ def get_optimal_time(idx):
     if idx >= 300: # Dynabarn
         path_length = -31 # hardcoded matching run.py
     else:
-        path_file_name = join("jackal_helper", "worlds/BARN/path_files", "path_%d.npy" %(idx * 6))
+        path_file_name = f"jackal_helper/worlds/BARN/path_files/path_{idx}.npy"
         path_array = np.load(path_file_name)
         path_array = [path_coord_to_gazebo_coord(*p) for p in path_array]
         path_array = np.insert(path_array, 0, (INIT_POSITION[0], INIT_POSITION[1]), axis=0)
