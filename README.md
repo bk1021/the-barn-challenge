@@ -22,6 +22,8 @@ Arguments:
 
 > NOTE: `start_idx` 0 and `spacing` 6 result in testing world index 0, 6, 12, ..., 354, the max world index is 359. The default launch file is `move_base_DWA.launch`, other arguments default value behave like `test.sh`
 
+I also added arguments for `run.py`, can check with `pyhton run.py -h`
+
 E.g.
 ```
 ./benchmark.sh --launch move_base_DWA.launch move_base_eband.launch --start_idx 0 --spacing 9 --repeat 5
