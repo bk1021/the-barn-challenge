@@ -66,7 +66,7 @@ if __name__ == "__main__":
     
     launch_file = join(base_path, 'launch', 'gazebo_launch.launch')
     world_name = join(base_path, "worlds", world_name)
-    rviz_config = join(base_path, "configs", arg.rviz_config)
+    rviz_config = join(base_path, "configs", args.rviz_config)
     
     gazebo_process = subprocess.Popen([
         'roslaunch',
