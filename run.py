@@ -32,6 +32,9 @@ if __name__ == "__main__":
     parser.add_argument('--gui', action="store_true")
     parser.add_argument('--out', type=str, default=None)
     parser.add_argument('--launch', type=str, default="move_base_DWA.launch")
+    parser.add_argument('--rviz', action='store_true', help="Launch RViz")
+    parser.add_argument('--rviz_config', type=str, default="common.rviz")
+
     args = parser.parse_args()
 
     if args.out is None:
@@ -63,12 +66,15 @@ if __name__ == "__main__":
     
     launch_file = join(base_path, 'launch', 'gazebo_launch.launch')
     world_name = join(base_path, "worlds", world_name)
+    rviz_config = join(base_path, "configs", arg.rviz_config)
     
     gazebo_process = subprocess.Popen([
         'roslaunch',
         launch_file,
         'world_name:=' + world_name,
-        'gui:=' + ("true" if args.gui else "false")
+        'gui:=' + ("true" if args.gui else "false"),
+        'rviz:=' + ("true" if args.rviz else "false"),
+        'rviz_config:=' + rviz_config
     ])
     time.sleep(5)  # sleep to wait until the gazebo being created
     
