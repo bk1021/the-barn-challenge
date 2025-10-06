@@ -1,5 +1,15 @@
 # Extra Features
 
+## rviz
+Rviz config files is under `jackal_helper/configs`.
+
+To visualize a run
+```
+python run.py --rviz --rviz_config eband.rviz
+```
+
+> NOTE: default rviz_config file is `common.rviz`, minimal edit is required if using `move_base`
+
 ## more flexible test script
 
 `benchmark.sh`
