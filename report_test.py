@@ -68,15 +68,39 @@ if __name__ == "__main__":
             )
             results[world_idx].append(nav_log)
 
-    mean_time = []
+    mean_time_static = []
+    mean_time_dynamic = []
+    total_static_world = 0
+    total_dynamic_world = 0
+    total_static_test = 0
+    total_dynamic_test = 0
     for k in results.keys():
         mean_time_world = [nl.time for nl in results[k] if nl.succeeded]
-        if len(mean_time_world) > 0:
-            mean_time.append(np.mean(mean_time_world))
+        if k < 300:
+            if len(mean_time_world) > 0:
+                mean_time_static.append(np.mean(mean_time_world))
+            total_static_world += 1
+            total_static_test += len(results[k])
+        else:
+            if len(mean_time_world) > 0:
+                mean_time_dynamic.append(np.mean(mean_time_world))
+            total_dynamic_world += 1
+            total_dynamic_test += len(results[k])
+    print("==================================== STATIC RESULT ===========================================")
+    print(f"No of worlds: {total_static_world}, No of tests: {total_static_test}")
     print("Avg Time: %.4f, Avg Metric: %.4f, Avg Success: %.4f, Avg Collision: %.4f, Avg Timeout: %.4f" %(
-        np.mean(mean_time),
-        np.mean([np.mean([nl.nav_metric for nl in results[k]]) for k in results.keys()]),
-        np.mean([np.mean([nl.succeeded for nl in results[k]]) for k in results.keys()]),
-        np.mean([np.mean([nl.collided for nl in results[k]]) for k in results.keys()]),
-        np.mean([np.mean([nl.timeout for nl in results[k]]) for k in results.keys()]),
+        np.mean(mean_time_static) if mean_time_static else 0.0,
+        np.mean([np.mean([nl.nav_metric for nl in results[k]]) for k in results.keys() if k < 300]),
+        np.mean([np.mean([nl.succeeded for nl in results[k]]) for k in results.keys() if k < 300]),
+        np.mean([np.mean([nl.collided for nl in results[k]]) for k in results.keys() if k < 300]),
+        np.mean([np.mean([nl.timeout for nl in results[k]]) for k in results.keys() if k < 300]),
+    ))
+    print("==================================== DYNAMIC RESULT ===========================================")
+    print(f"No of worlds: {total_dynamic_world}, No of tests: {total_dynamic_test}")
+    print("Avg Time: %.4f, Avg Metric: %.4f, Avg Success: %.4f, Avg Collision: %.4f, Avg Timeout: %.4f" %(
+        np.mean(mean_time_dynamic) if mean_time_dynamic else 0.0,
+        np.mean([np.mean([nl.nav_metric for nl in results[k]]) for k in results.keys() if k >= 300]),
+        np.mean([np.mean([nl.succeeded for nl in results[k]]) for k in results.keys() if k >= 300]),
+        np.mean([np.mean([nl.collided for nl in results[k]]) for k in results.keys() if k >= 300]),
+        np.mean([np.mean([nl.timeout for nl in results[k]]) for k in results.keys() if k >= 300]),
     ))
