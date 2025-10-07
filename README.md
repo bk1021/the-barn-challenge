@@ -1,57 +1,11 @@
-# Extra Features
+# THIS FORKED REPO ADDED EXTRA FEATURES FOR ORIGINAL BARN CHALLENGE REPO
+[check out extra features](#extra-features)
 
-## rviz
-Rviz config files is under `jackal_helper/configs`.
-
-To visualize a run
-```
-python run.py --rviz --rviz_config eband.rviz
-```
-
-> NOTE: default rviz_config file is `common.rviz`, minimal edit is required if using `move_base`
-
-## more flexible test script
-
-`benchmark.sh`
-
-Arguments:
-- `launch`: launch file for the navigation stack (can add more than 1)
-- `start_idx`: starting world index
-- `spacing`: index spacing
-- `repeat`: repeat time for each world index
-
-> NOTE: `start_idx` 0 and `spacing` 6 result in testing world index 0, 6, 12, ..., 354, the max world index is 359. The default launch file is `move_base_DWA.launch`, other arguments default value behave like `test.sh`
-
-E.g.
-```
-./benchmark.sh --launch move_base_DWA.launch move_base_eband.launch --start_idx 0 --spacing 9 --repeat 5
-```
-
-> I also added arguments for `run.py`, can check with `pyhton run.py -h`
-
-## move_base teb & mpc local planner plugin
-> NOTE: a fix is required to build mpc_local_planner, refers to https://github.com/rst-tu-dortmund/mpc_local_planner/pull/46
-
-Installation
-```
-cd ~/jackal_ws/src
-# teb
-git clone https://github.com/rst-tu-dortmund/teb_local_planner.git
-cd teb_local_planner
-git checkout melodic-devel
-# mpc
-cd ..
-git clone https://github.com/rst-tu-dortmund/mpc_local_planner.git
-cd mpc_local_planner
-git checkout melodic-devel
-# install dependencies and build
-cd ../..
-rosdep install teb_local_planner
-rosdep install mpc_local_planner
-catkin_make
-```
-
-
+## Content of extra features
+- [Rviz](#rviz)
+- [New test script](#more-flexible-test-script-and-more-detailed-test-report)
+- [Playground](#playground)
+- [Move base's TEB and MPC installation guide](#move_base-teb--mpc-local-planner-plugin)
 
 --------------------------------------------------------------------------------
 
@@ -180,3 +134,87 @@ Except for `DWA`, we also provide three learning-based navigation stack as examp
 
 ## Submission
 Submit a link that downloads your customized repository to this [Google form](https://docs.google.com/forms/d/e/1FAIpQLSfZLMVluXE-HWnV9lNP00LuBi3e9HFOeLi30p9tsHUViWpqrA/viewform). Your navigation stack will be tested in the Singularity container on 50 hold-out BARN worlds sampled from the same distribution as the 300 BARN worlds. In the repository, make sure the `run.py` runs your navigation stack and `Singularityfile.def` installs all the dependencies of your repo. We suggest to actually build an image and test it with `./singularity_run.sh /path/to/image/file python3 run.py --world_idx 0`. You can also refer to branch `LfH`, `applr` and `e2e`, which are in the correct form for submissions.
+
+--------------------------------------------------------
+
+# Extra Features
+
+## Rviz
+Rviz config files for path planning visualization is under `jackal_helper/configs`.
+
+To visualize a run
+```
+python run.py --rviz --rviz_config eband.rviz
+```
+
+> NOTE: default rviz_config file is `common.rviz` matching move_base DWA topic names, minimal edit is required if using other `move_base` plugins, more edit is required for using your own navigation stack developed outside of move_base
+
+## More flexible test script and more detailed test report
+
+`benchmark.sh` is a more customizable test script to the original `test.sh`
+
+Arguments:
+- `launch`: launch file for the navigation stack (can add more than 1)
+- `start_idx`: starting world index
+- `spacing`: index spacing
+- `repeat`: repeat time for each world index
+
+> NOTE: `start_idx` 0 and `spacing` 6 result in testing world index 0, 6, 12, ..., 354, the max world index is 359. The default launch file is `move_base_DWA.launch`, other arguments default value behave like `test.sh`
+
+E.g.
+```
+./benchmark.sh --launch move_base_DWA.launch move_base_eband.launch --start_idx 0 --spacing 9 --repeat 5
+```
+
+### Test report
+`report_test.py` now report separate metrics for static and dynamic worlds.
+
+Report test for previous run logs, e.g. `move_base_DWA.launch.txt`
+```
+python report_test.py --out_path move_base_DWA.launch.txt
+```
+
+> I also added arguments for `run.py`, can check with `pyhton run.py -h`
+
+## Playground
+
+Run rviz, gazebo and navigation stack and keep them active to receive goal poses. 
+You can easily set a goal pose in rviz using `2d goal pose` or do it via command line.
+```
+python playground.py --launch move_base_eband.launch --rviz_config eband.rviz
+```
+
+### set goal using command line
+Publish goal to topic
+```
+rostopic pub -1 /move_base_simple/goal geometry_msgs/PoseStamped \
+'header: {frame_id: "odom"} pose: {position: {x: 2.0, y: 3.0, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}'
+
+```
+Using `move_base` action server gui to send goal interactively
+```
+rosrun actionlib axclient.py /move_base
+```
+
+## `move_base` teb & mpc local planner plugin
+> NOTE: a fix is required to build mpc_local_planner, refers to https://github.com/rst-tu-dortmund/mpc_local_planner/pull/46
+
+Installation
+```
+cd ~/jackal_ws/src
+# teb
+git clone https://github.com/rst-tu-dortmund/teb_local_planner.git
+cd teb_local_planner
+git checkout melodic-devel
+# mpc
+cd ..
+git clone https://github.com/rst-tu-dortmund/mpc_local_planner.git
+cd mpc_local_planner
+git checkout melodic-devel
+# install dependencies and build
+cd ../..
+rosdep install teb_local_planner
+rosdep install mpc_local_planner
+catkin_make
+```
+
