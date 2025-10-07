@@ -1,5 +1,15 @@
 # Extra Features
 
+## rviz
+Rviz config files is under `jackal_helper/configs`.
+
+To visualize a run
+```
+python run.py --rviz --rviz_config eband.rviz
+```
+
+> NOTE: default rviz_config file is `common.rviz`, minimal edit is required if using `move_base`
+
 ## more flexible test script
 
 `benchmark.sh`
@@ -16,6 +26,9 @@ E.g.
 ```
 ./benchmark.sh --launch move_base_DWA.launch move_base_eband.launch --start_idx 0 --spacing 9 --repeat 5
 ```
+
+> I also added arguments for `run.py`, can check with `pyhton run.py -h`
+
 ## move_base teb & mpc local planner plugin
 > NOTE: a fix is required to build mpc_local_planner, refers to https://github.com/rst-tu-dortmund/mpc_local_planner/pull/46
 
